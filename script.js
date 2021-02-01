@@ -82,9 +82,8 @@ window.onload = function(){
         };
 
     const drawBlock = (ctx, position) => {
-            const x = position[0] * blockSize;
-            const y = position[1] * blockSize;
-            ctx.fillRect(x ,y , blockSize, blockSize);  
+            const [x, y] = position;
+            ctx.fillRect(x * blockSize ,y * blockSize , blockSize, blockSize);  
         }
     
     class Snake {
@@ -97,8 +96,8 @@ window.onload = function(){
         draw (){           
             ctx.save ();
             ctx.fillStyle = "#ff0000";
-            for(let i = 0; i < this.body.length; i++){
-                drawBlock(ctx, this.body[i]);
+            for(let block of this.body){
+                drawBlock(ctx, block);
             }
             ctx.restore ();  
         };
@@ -151,10 +150,8 @@ window.onload = function(){
         checkCollision(){
                let wallCollision = false;
                let snakeCollision = false;
-               const head = this.body[0];
-               const rest = this.body.slice(1);
-               const snakeX = head[0];
-               const snakeY = head[1];
+               const [head, ...rest] = this.body;
+               const [snakeX, snakeY]= head;
                const minX = 0;
                const minY = 0;
                const maxX = widthInBlocks - 1;
@@ -165,8 +162,8 @@ window.onload = function(){
                if(isNotBetweenVerticalWalls || isNotBetweenHorizontalWalls){
                    wallCollision = true;
                }
-               for(let i = 0; i < rest.length; i++){
-                        if(snakeX === rest[i][0] && snakeY === rest[i][1]){
+               for(let block of rest){
+                        if(snakeX === block[0] && snakeY === block[1]){
                             snakeCollision = true;
                         }
                     }
@@ -207,8 +204,8 @@ window.onload = function(){
 
         isOnSnake (snakeToCheck){
             let isOnSnake = false;
-            for (let i = 0 ; i < snakeToCheck.body.length; i++){
-                if(this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck.body[i][1]){
+            for (let block of snakeToCheck.body){
+                if(this.position[0] === block[0] && this.position[1] === block[1]){
                     isOnSnake = true;
                 }
             }
